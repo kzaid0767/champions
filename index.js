@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue,child, remove, set, get,update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL : "https://champions-146bc-default-rtdb.firebaseio.com/"
@@ -17,6 +17,21 @@ const toEl = document.querySelector('#to-input')
 const publishBtn = document.querySelector('#publish-btn')
 const postContainer = document.querySelector('#posts-container')
 
+//fetching from firebase
+onValue(itemsInDB, function(snapshot){
+    //making array from snapshot values
+    if(snapshot.exists()){
+        let itemsArray = Object.entries(snapshot.val()).reverse()
+        clearPosts()
+        
+        for(let thing of itemsArray){
+            addPost(thing)
+        }
+
+        addClicking()
+    } else postContainer.innerHTML = `<p> No posts to show!</p>`
+})
+
 publishBtn.addEventListener('click', handleClick)
 
 function handleClick(){
@@ -24,16 +39,63 @@ function handleClick(){
     let from = fromEl.value
     let to = toEl.value
     if(post){
-        push(itemsInDB, {post,from,to})
+        push(itemsInDB, {post,from,to,likes:0})
     }
 
     resetInputs()
 }
 
-function addPost({post,from,to}){
-    postContainer.innerHTML += `<p>${post}</p>`
+function addPost(value){
+    let newHTML = `
+        <div class="single-post">
+            <span class="span-to">To: ${value[1].to}</span>
+            <p class="paragraph">${value[1].post} </p>
+            <div class="post-bottom">
+                <span class="span-from">From: ${value[1].from}</span>
+                <span><i class="fa fa-heart" id="${value[0]}"></i> ${value[1].likes}</span>
+            </div>
+        </div>
+    `
+    postContainer.innerHTML += newHTML
+    
+}
+
+function clearPosts(){
+    postContainer.innerHTML  = ''
 }
 
 function resetInputs(){
     [inputEl.value,fromEl.value,toEl.value] = ['','','']
+}
+
+function addClicking(){
+    for(let element of document.getElementsByClassName('fa')){
+        element.addEventListener('click', (e)=>handleLikes(e))
+    }
+}
+
+function handleLikes(e){
+    let id = e.target.id
+    let from
+    let likes
+    let post
+    let to
+    get(child(itemsInDB,`${id}`)).then((snapshot)=>{
+        if(snapshot.exists()){
+            from = snapshot.val().from
+            likes = snapshot.val().likes + 1
+            post = snapshot.val().post
+            to = snapshot.val().to
+            // console.log({from,likes,post,to})
+            set(child(itemsInDB,`${id}`),{from,likes,post,to})
+        } else {
+            console.log('no data')
+        }
+    })
+
+
+}
+
+function nowUpdate(){
+    console.log('reached here')
 }

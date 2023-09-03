@@ -66,11 +66,76 @@ button{
     border: none;
 }
 
-p{
+.single-post{
     background-color: #FFFFFF;
     color: #1B1924;
     width: 19rem;
-    margin: 0.5rem auto;
+    margin: 0.5rem auto 0 auto;
     padding: 0.9rem;
     text-align: left;
+}
+
+p{
+    margin:0.3rem 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #1B1924;
+}
+
+.span-to, .span-from{
+    font-weight: 800;
+    color: #1B1924;
+}
+
+.post-bottom{
+    display: flex;
+    justify-content: space-between;
+}
+
+@media screen and (min-width: 700px) {
+    .paragraphs{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 0 3rem;
+    }
+    
+    .single-post{
+        flex-grow: 1;
+        width:fit-content;
+    }
+
+    img{
+        width: 10rem;
+    }
+
+    h1{
+        font-size: 5vw;
+    }
+
+    h3{
+        font-size: 3vw;
+    }
+
+    #input-field{
+        width: 55vw;
+        font-size: 2rem;
+    }
+
+    button{
+        width: 55vw;
+        font-size: 2.8rem;
+        padding-top: 0.5rem;
+        height: 6rem;
+    }
+
+    .from-to{
+        width: 55vw;
+    }
+
+    .from-to input{
+        width: 27vw;
+        height: 5vw;
+        font-size: 2rem;
+    }
 }
