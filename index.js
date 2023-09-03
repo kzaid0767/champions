@@ -77,23 +77,28 @@ function addClicking(){
 
 function handleLikes(e){
     let id = e.target.id
-    let from
-    let likes
-    let post
-    let to
-    // getting post using id and increasing likes count
-    get(child(itemsInDB,`${id}`)).then((snapshot)=>{
-        if(snapshot.exists()){
-            from = snapshot.val().from
-            likes = snapshot.val().likes + 1
-            post = snapshot.val().post
-            to = snapshot.val().to
-            // line below updates to new state
-            set(child(itemsInDB,`${id}`),{from,likes,post,to})
-        } else {
-            console.log('no data')
-        }
-    })
+    let wasLiked = JSON.parse(localStorage.getItem(`${id}`))
+    if (!wasLiked){
+        let from
+        let likes
+        let post
+        let to
+        // getting post using id and increasing likes count
+        get(child(itemsInDB,`${id}`)).then((snapshot)=>{
+            if(snapshot.exists()){
+                from = snapshot.val().from
+                likes = snapshot.val().likes + 1
+                post = snapshot.val().post
+                to = snapshot.val().to
+                // line below updates to new state
+                set(child(itemsInDB,`${id}`),{from,likes,post,to})
+                localStorage.setItem(`${id}`, JSON.stringify(true))
+            } else {
+                console.log('no data')
+            }
+        })
+    }
+    
 
 
 }
