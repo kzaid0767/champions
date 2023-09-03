@@ -68,6 +68,7 @@ function resetInputs(){
     [inputEl.value,fromEl.value,toEl.value] = ['','','']
 }
 
+//clicking to each fa icon
 function addClicking(){
     for(let element of document.getElementsByClassName('fa')){
         element.addEventListener('click', (e)=>handleLikes(e))
@@ -80,13 +81,14 @@ function handleLikes(e){
     let likes
     let post
     let to
+    // getting post using id and increasing likes count
     get(child(itemsInDB,`${id}`)).then((snapshot)=>{
         if(snapshot.exists()){
             from = snapshot.val().from
             likes = snapshot.val().likes + 1
             post = snapshot.val().post
             to = snapshot.val().to
-            // console.log({from,likes,post,to})
+            // line below updates to new state
             set(child(itemsInDB,`${id}`),{from,likes,post,to})
         } else {
             console.log('no data')
@@ -94,8 +96,4 @@ function handleLikes(e){
     })
 
 
-}
-
-function nowUpdate(){
-    console.log('reached here')
 }
